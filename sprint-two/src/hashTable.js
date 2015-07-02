@@ -1,13 +1,26 @@
+/*var people = [['Steven', 'Tyler'], ['George', 'Harrison'], ['Mr.', 'Doob'], ['Dr.', 'Sunshine'], ['John', 'Resig'], ['Brendan', 'Eich'], ['Alan', 'Turing']];
+var hashTable = new HashTable();
+_.each(people, function(person) {
+  var firstName = person[0], lastName = person[1];
+  hashTable.insert(firstName,lastName);
+});*/
+
 var HashTable = function(){
   this._limit = 8;
   this._storage = LimitedArray(this._limit);
+  this.cellsOccupied = 0;
+  this._readjusting = false;
 };
 
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
   if (this._storage.get(i) === null || this._storage.get(i) === undefined){
+  	this.cellsOccupied++;
   	this._storage.set(i, createHashLinkedList(k, v));
+  	this.adjustSize();
+  	console.log(this._limit);
   } else {
+  	this.cellsOccupied++;
   	this._storage.get(i).addToTail(k, v);
   }
 };
@@ -20,7 +33,61 @@ HashTable.prototype.retrieve = function(k){
 HashTable.prototype.remove = function(k){
 	var i = getIndexBelowMaxForKey(k, this._limit);
 	this._storage.get(i).removeNodeByKey(k);
+	this.adjustSize();
+	this.cellsOccupied--;
 };
+
+HashTable.prototype.getPercentOccupied = function () {
+	// if ((this.cellsOccupied / this._limit) >= 0.625){
+	// 	debugger;
+	// }
+	console.log(this.cellsOccupied / this._limit);
+	return this.cellsOccupied / this._limit;
+};
+
+HashTable.prototype.rearrange = function (allNodes) {
+	var hashTable = this;
+	this.cellsOccupied = 0;
+	this._readjusting = true;
+	this._storage = LimitedArray(this._limit);
+	_.each(allNodes, function(node){
+		hashTable.insert(node.key, node.value);
+	});
+	this._readjusting = false;
+};
+
+HashTable.prototype.adjustSize = function () {
+	if (!this._readjusting && this.getPercentOccupied() >= .75) {
+		var allNodes = this.getAllNodes();
+		var hashTable = this;
+		this._limit *= 2;
+			var cellNumber = 0;
+			this._storage.each(function (cell) {
+				console.log(cellNumber++);
+				if (cell) {
+					cell.each(function (node) {console.log(node)});
+				}
+			});
+		this.rearrange(allNodes);
+	} else if (!this._readjusting && this.getPercentOccupied() < .25) {
+		var allNodes = this.getAllNodes();
+		var hashTable = this;
+		this._limit /= 2;
+		this.rearrange(allNodes);
+	}
+}
+
+HashTable.prototype.getAllNodes = function(){
+	var allNodes = [];
+	this._storage.each(function (cell) {
+		if (typeof cell === 'object') {
+			cell.each(function (node) {
+				allNodes.push(node);
+			});
+	 	}
+	});
+	return allNodes;
+}
 
 var hashLinkedList = function () {
 	var linkedList = LinkedList();
@@ -60,6 +127,14 @@ var hashLinkedList = function () {
 			initialNode = initialNode.next;
 		}
 		return initialNode;
+	};
+
+	linkedList.each = function (cb) {
+		var initialNode = this.head;
+		while (initialNode !== null){
+			cb(initialNode);
+			initialNode = initialNode.next;
+		}
 	};
 
 	return linkedList;
