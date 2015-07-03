@@ -37,4 +37,13 @@ describe('set', function() {
     expect(set.contains(1)).to.equal(false);
   });
 
+  it('should be able to handle input objects of any type',function(){
+    var array = [1,2];
+    var obj = {a: 2};
+    set.add(array);
+    set.add(obj);
+    expect(set.contains(obj)).to.equal(true);
+    expect(set.contains(array)).to.equal(true);
+  })
+
 });
