@@ -137,8 +137,10 @@ BinarySearchTree.prototype = {
 			newRoot.right = this;
 
 			// adds subtree
-			newRoot.left.insert(newRootSubTree);
-			
+			if (newRootSubTree) {
+				newRoot.left.insert(newRootSubTree);
+			}
+
 			// remove left from this
 			this.left = undefined;
 
@@ -149,6 +151,7 @@ BinarySearchTree.prototype = {
 
 		if ((this.right.depth() / this.left.depth()) >= 2) {
 			var newRoot = this.right.getMin(),
+				newRootSubTree = newRoot.right,
 				newRootParent = this.getParent(newRoot.value);
 			//debugger;
 			// remove newRoot as a leaf
@@ -157,6 +160,11 @@ BinarySearchTree.prototype = {
 			// add right and this to newRoot
 			newRoot.right = this.right;
 			newRoot.left = this;
+
+			// adds subtree
+			if (newRootSubTree) {
+				newRoot.right.insert(newRootSubTree);
+			}
 
 			// remove right from this
 			this.right = undefined;
