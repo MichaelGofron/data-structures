@@ -42,8 +42,34 @@ BinarySearchTree.prototype = {
 		if (this.right !== undefined){
 			this.right.depthFirstLog(cb);
 		}
+	},
+	breadthFirstLog: function (cb) {
+		var queue = [];
+		var children = [this];
+		var getChildrenOf = function (array) {
+			return _.reject(
+					_.flatten(
+						_.map(children, function (tree) {
+							return [tree.left, tree.right];
+						})
+					), function (value) {
+						return value === undefined
+					});
+		};
+
+		while (children.length > 0) {
+			queue = queue.concat(children);
+			children = getChildrenOf(children);
+		}
+
+		_.each(queue, function (tree) {
+			cb(tree);
+		});
+
 	}
 };
+
+
 /*
  * Complexity: What is the time complexity of the above functions?
  */

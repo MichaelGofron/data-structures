@@ -33,37 +33,58 @@ var LinkedList = function(){
   };
 
   return list;
-/*
-  list.retreiveNodeByKey = function (key) {
-    var initialNode = this.head;
-    while (initialNode !== null){
-      if (initialNode.key === key){
-        return initialNode.value;
-      }
-      initialNode = initialNode.next;
-    }
-    return initialNode.value;
-  }
-*/
-};
-/*
-var createLinkedList = function (value, key) {
-  var list = LinkedList();
-  list.addToTail(value);
-  list.tail.key = key;
-  return list;
-}
 
-*/
+};
 
 var Node = function(value){
   var node = {};
 
   node.value = value;
   node.next = null;
+  node.previous = null;
 
   return node;
 };
+
+var DoublyLinkedList = function () {
+  var list = LinkedList();
+
+  list.addToHead = function (value) {
+    var node = Node(value); // add previous,
+    if (this.head === null) {
+      this.head = node;
+      this.tail = node;
+    } else {
+      this.head.previous = node;
+      node.next = this.head;
+      this.head = node;
+    }
+  };
+
+  list.addToTail = function (value) {
+    var node = Node(value);
+    if (list.head === null) {
+      list.head = node;
+    }
+
+    if (list.tail !== null) {
+      node.previous = list.tail;
+      list.tail.next = node;
+    }
+    
+    list.tail = node;
+  };
+
+  list.removeTail = function(){
+    var removedNode = this.tail;
+    this.tail = this.tail.previous;
+    this.tail.next = null;
+    return removedNode.value;
+  };
+
+  return list; 
+};
+
 
 /*
  * Complexity: What is the time complexity of the above functions?

@@ -18,7 +18,6 @@ HashTable.prototype.insert = function(k, v){
   	this.cellsOccupied++;
   	this._storage.set(i, createHashLinkedList(k, v));
   	this.adjustSize();
-  	console.log(this._limit);
   } else {
   	this.cellsOccupied++;
   	this._storage.get(i).addToTail(k, v);
