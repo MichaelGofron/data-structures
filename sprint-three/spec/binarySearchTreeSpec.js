@@ -16,8 +16,14 @@ describe('binarySearchTree', function() {
     binarySearchTree.insert(3);
     binarySearchTree.insert(7);
     binarySearchTree.insert(6);
-    expect(binarySearchTree.left.right.value).to.equal(3);
+    
+    // expect(binarySearchTree.value).to.equal(5);
+    // expect(binarySearchTree.right.right.value).to.equal(7);
+  
+    
+    expect(binarySearchTree.value).to.equal(5);
     expect(binarySearchTree.right.left.value).to.equal(6);
+    
   });
 
   it('should have a working "contains" method', function(){
@@ -47,5 +53,16 @@ describe('binarySearchTree', function() {
       string += tree.value;
     });
     expect(string).to.equal('54321');
+  });
+
+  it('should rebalance a tree as soon as the max depth is more than twice the minimum depth',function(){
+    binarySearchTree.insert(1);
+    binarySearchTree.insert(10);
+    binarySearchTree.insert(20);
+    binarySearchTree.insert(30);
+    binarySearchTree.insert(40);
+    binarySearchTree.insert(50);
+
+    expect(binarySearchTree.depth()).to.equal(4);
   });
 });
