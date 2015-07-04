@@ -12,15 +12,14 @@ describe('binarySearchTree', function() {
   });
 
   it('should insert values at the correct location in the tree', function(){
-    binarySearchTree.insert(2);
-    binarySearchTree.insert(3);
-    binarySearchTree.insert(7);
-    binarySearchTree.insert(6);
+    binarySearchTree = binarySearchTree.insert(2);
+    binarySearchTree = binarySearchTree.insert(3);
+    binarySearchTree = binarySearchTree.insert(7);
+    binarySearchTree = binarySearchTree.insert(6);
     
     // expect(binarySearchTree.value).to.equal(5);
     // expect(binarySearchTree.right.right.value).to.equal(7);
   
-    
     expect(binarySearchTree.value).to.equal(5);
     expect(binarySearchTree.right.left.value).to.equal(6);
     
@@ -37,22 +36,22 @@ describe('binarySearchTree', function() {
   it('should execute a callback on every value in a tree using "depthFirstLog"', function(){
     var array = [];
     var func = function(value){ array.push(value); };
-    binarySearchTree.insert(2);
-    binarySearchTree.insert(3);
+    binarySearchTree = binarySearchTree.insert(2);
+    binarySearchTree = binarySearchTree.insert(3);
     binarySearchTree.depthFirstLog(func);
-    expect(array).to.eql([5,2,3]);
+    expect(array).to.eql([3,2,5]);
   });
 
   it('should log nodes contained in the tree using a breadth-first approach', function () {
     var string = "";
-    binarySearchTree.insert(4);
-    binarySearchTree.insert(3);
-    binarySearchTree.insert(2);
-    binarySearchTree.insert(1);
-    binarySearchTree.breadthFirstLog(function (tree) {
+    binarySearchTree = binarySearchTree.insert(4);
+    binarySearchTree = binarySearchTree.insert(3);
+    binarySearchTree = binarySearchTree.insert(2);
+    binarySearchTree = binarySearchTree.insert(1);
+    binarySearchTree = binarySearchTree.breadthFirstLog(function (tree) {
       string += tree.value;
     });
-    expect(string).to.equal('54321');
+    expect(string).to.equal('32514');
   });
 
   it('should rebalance a tree as soon as the max depth is more than twice the minimum depth',function(){
@@ -63,6 +62,6 @@ describe('binarySearchTree', function() {
     binarySearchTree.insert(40);
     binarySearchTree.insert(50);
 
-    expect(binarySearchTree.depth()).to.equal(4);
+    expect(binarySearchTree.depth()).to.equal(2);
   });
 });

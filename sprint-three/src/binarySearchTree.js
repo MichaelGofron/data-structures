@@ -12,7 +12,7 @@ var BinarySearchTree = function(value){
 };
 
 BinarySearchTree.prototype = {
-	insert: function (tree) {
+	insert: function (tree, readjust) {
 		if (typeof tree !== 'object') {
 			tree = BinarySearchTree(tree);
 		}
@@ -21,16 +21,19 @@ BinarySearchTree.prototype = {
 			if (this.left === undefined) {
 				this.left = tree;
 			} else {
-				this.left.insert(tree);
+				this.left.insert(tree, true);
 			}
 		} else {
 			if (this.right === undefined){
 				this.right = tree;
 			} else{
-				this.right.insert(tree);
+				this.right.insert(tree, true);
 			}
 		}
-
+		
+		if (!readjust){
+			return this.rebalance();
+		}
 	},
 	
 
@@ -105,7 +108,7 @@ BinarySearchTree.prototype = {
 					return tree.value;
 				});
 			}
-			var trees = sortTrees();
+
 			var insertMedians = function(array){
 				if (array.length === 0) {
 					return;
@@ -114,15 +117,22 @@ BinarySearchTree.prototype = {
 				if (balancedTree === undefined) {
 					balancedTree = array[getMedian(array)];
 				} else {
-					balancedTree.insert(array[getMedian(array)]);
+					balancedTree.insert(array[getMedian(array)], true); // add boolean
 				}
 				insertMedians(array.slice(0, getMedian(array)));
 				insertMedians(array.slice(getMedian(array) + 1));
 			};
+
+			var trees = sortTrees();
+			_.each(trees,function(tree){
+				tree.left = undefined;
+				tree.right = undefined;
+			});
 			
 			insertMedians(trees);
 			return balancedTree;
 		};
+		return this;
 	}
 };
 
@@ -132,7 +142,11 @@ BinarySearchTree.prototype = {
  */
 
 /*
-var tree = new BinarySearchTree(20);
+var tree = new BinarySearchTree(5);
+tree.insert(1);
+tree.insert(10);
+tree.insert(20);
+//tree.insert(1);
  
 var t20 = new BinarySearchTree();
 var t15 = new BinarySearchTree();
