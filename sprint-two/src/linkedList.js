@@ -33,28 +33,8 @@ var LinkedList = function(){
   };
 
   return list;
-/*
-  list.retreiveNodeByKey = function (key) {
-    var initialNode = this.head;
-    while (initialNode !== null){
-      if (initialNode.key === key){
-        return initialNode.value;
-      }
-      initialNode = initialNode.next;
-    }
-    return initialNode.value;
-  }
-*/
-};
-/*
-var createLinkedList = function (value, key) {
-  var list = LinkedList();
-  list.addToTail(value);
-  list.tail.key = key;
-  return list;
-}
 
-*/
+};
 
 var Node = function(value){
   var node = {};

@@ -3,7 +3,6 @@ var Tree = function(value){
   newTree.value = value;
   newTree.parent = null;
 
-  // your code here
   newTree.children = []; 
 
   return _.extend(newTree, treeMethods);
