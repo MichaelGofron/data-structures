@@ -1,5 +1,3 @@
-
-
 var BinarySearchTree = function(value){
 	var bst = {};
 
