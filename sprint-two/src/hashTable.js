@@ -10,15 +10,17 @@ var HashTable = function(){
   this._storage = LimitedArray(this._limit);
   this.cellsOccupied = 0;
   this._readjusting = false;
+  this._MAX_OCCUPANCY = .75;
+  this._MIN_OCCUPANCY = .25;
 };
 
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  if (this._storage.get(i) === null || this._storage.get(i) === undefined){
+  if (this._storage.get(i) === undefined) { 
+  	// add linkedList to empty cell
   	this.cellsOccupied++;
   	this._storage.set(i, createHashLinkedList(k, v));
-  	this.adjustSize();
-  	console.log(this._limit);
+  	this.adjustSize(); 
   } else {
   	this.cellsOccupied++;
   	this._storage.get(i).addToTail(k, v);
@@ -45,22 +47,27 @@ HashTable.prototype.rearrange = function (allNodes) {
 	var hashTable = this;
 	this.cellsOccupied = 0;
 	this._readjusting = true;
+
+	//create new storage
 	this._storage = LimitedArray(this._limit);
+
+	// add values to new storage
 	_.each(allNodes, function(node){
 		hashTable.insert(node.key, node.value);
 	});
+
 	this._readjusting = false;
 };
 
 HashTable.prototype.adjustSize = function () {
-	if (!this._readjusting && this.getPercentOccupied() >= .75) {
+	if (!this._readjusting && this.getPercentOccupied() >= this._MAX_OCCUPANCY) {
+		// double hash table size
 		var allNodes = this.getAllNodes();
-		var hashTable = this;
 		this._limit *= 2;
 		this.rearrange(allNodes);
-	} else if (!this._readjusting && this.getPercentOccupied() < .25) {
+	} else if (!this._readjusting && this.getPercentOccupied() < this._MIN_OCCUPANCY) {
+		// halve hash table size
 		var allNodes = this.getAllNodes();
-		var hashTable = this;
 		this._limit /= 2;
 		this.rearrange(allNodes);
 	}

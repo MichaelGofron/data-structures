@@ -2,15 +2,10 @@ var Tree = function(value){
   var newTree = {};
   newTree.value = value;
 
-  // your code here
-  newTree.children = [];  // fix me
+  newTree.children = []; 
 
   return _.extend(newTree, treeMethods);
 };
-
-
-
-
 
 var treeMethods = {};
 
@@ -19,18 +14,15 @@ treeMethods.addChild = function(value){
 };
 
 treeMethods.contains = function(target){
-	var isIn = false;
 	if (this.value === target) {
 		return true;
 	}
 
-	_.each(this.children, function (tree) {
-		if (tree.contains(target)) {
-			isIn = true;
-		};
-	});
+	for (var i = 0; i < this.children.length; i++) {
+		if (this.children[i].contains(target)) return true;
+	}
 
-	return isIn;
+	return false;
 };
 
 
